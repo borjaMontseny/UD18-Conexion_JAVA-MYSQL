@@ -4,7 +4,7 @@ import java.sql.*;
 import javax.swing.JOptionPane;
 
 public class Driver {
-	
+
 	// Declaramos la variable de tipo conexion
 	public static Connection conexion;
 
@@ -13,8 +13,8 @@ public class Driver {
 
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
-			conexion = DriverManager.getConnection("jdbc:mysql://192.168.31.165:3306?useTimezone=true&serverTimezone=UTC",
-					"remote", "Reus_2022"); // credenciales temporales
+			conexion = DriverManager.getConnection("jdbc:mysql://localhost:3306?useTimezone=true&serverTimezone=UTC",
+					"root", "Facebook2!"); // credenciales temporales
 			System.out.print("Server Connected");
 
 		} catch (SQLException | ClassNotFoundException ex) {
@@ -95,9 +95,30 @@ public class Driver {
 		}
 
 	}
+	
+	// METODO QUE ACTUALIZA (UPDATE) DATOS EN TABLAS MYSQL
+	public static void updateData(String db, String table_name, String insercion) {
+		try {
+			String Querydb = "USE " + db + ";";
+			Statement stdb = conexion.createStatement();
+			stdb.executeUpdate(Querydb);
 
-	// METODO QUE OBTIENE VALORES MYSQL
-	public static void getValues(String db, String table_name) {
+			String Query = "UPDATE " + table_name + " " + insercion;
+			Statement st = conexion.createStatement();
+			st.executeUpdate(Query);
+
+			System.out.println("Datos actualizados correctamente");
+			;
+
+		} catch (SQLException ex) {
+			System.out.println(ex.getMessage());
+			JOptionPane.showMessageDialog(null, "Error en la actualizacion");
+		}
+
+	}
+
+	// METODO QUE OBTIENE VALORES MYSQL DEL EJERCICIO 1
+	public static void getValues_ex01(String db, String table_name) {
 		try {
 			String Querydb = "USE " + db + ";";
 			Statement stdb = conexion.createStatement();
@@ -121,6 +142,30 @@ public class Driver {
 
 	}
 
+	// METODO QUE OBTIENE VALORES MYSQL DEL EJERCICIO 2
+	public static void getValues_ex02(String db, String table_name) {
+		try {
+			String Querydb = "USE " + db + ";";
+			Statement stdb = conexion.createStatement();
+			stdb.executeUpdate(Querydb);
+
+			String Query = "SELECT * FROM " + table_name;
+			Statement st = conexion.createStatement();
+			java.sql.ResultSet resultSet;
+			resultSet = st.executeQuery(Query);
+
+			while (resultSet.next()) {
+				System.out.println("");
+				System.out.println("DNI: " + resultSet.getString("DNI") + " " + "Nombre: "
+						+ resultSet.getString("nombre") + " " + "Apellidos:" + resultSet.getString("apellidos") + " "
+						+ "Departamento: " + resultSet.getString("departamento"));
+			}
+		} catch (SQLException ex) {
+			System.out.println(ex.getMessage());
+			System.out.println("Error en la adquisicion de datos");
+		}
+	}
+		
 	// METODO QUE LIMPIA TABLAS MYSQL
 	public static void deleteRecord(String db, String table_name, int Codigo) {
 		try {
